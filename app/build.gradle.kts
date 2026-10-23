@@ -40,4 +40,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)
+    // Para las animaciones Lottie
+    implementation("com.airbnb.android:lottie:6.1.0")
+// Para las notificaciones programadas
+    implementation("androidx.work:work-runtime:2.8.1")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }
