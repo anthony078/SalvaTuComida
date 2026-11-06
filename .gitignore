@@ -13,3 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+# Ignorar archivos compilados de C#
+**/bin/
+**/obj/
+**/.vs/
+**/Imagenes/
