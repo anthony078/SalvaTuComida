@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1085088059693",
+    "project_id": "salvatucomida-app",
+    "storage_bucket": "salvatucomida-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085088059693:android:2aabc8d39e35c2530cc3a4",
+        "android_client_info": {
+          "package_name": "com.example.salvatucomida"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNAZG9RglsD-TPezTWP54hxf3fUBPBxL8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
