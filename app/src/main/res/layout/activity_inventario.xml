@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F1E8">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="70dp">
+
+        <!-- ENCABEZADO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="14dp"
+            android:gravity="center_vertical"
+            android:background="#1D4327">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Inventario"
+                    android:textColor="#DDE8DF"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Tu despensa"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- BOTÓN PDF -->
+            <Button
+                android:id="@+id/btnExportarPDF"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:text="📄 PDF"
+                android:textSize="10sp"
+                android:textColor="#1D4327"
+                android:backgroundTint="#FFFFFF"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp" />
+
+            <!-- CONTADOR -->
+            <TextView
+                android:id="@+id/txtCantidadProductos"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:gravity="center"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:text="0 prod"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:background="@drawable/bg_contador_productos" />
+        </LinearLayout>
+
+        <!-- BUSCADOR -->
+        <EditText
+            android:id="@+id/edtBuscarProducto"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bg_busqueda"
+            android:hint="🔍  Buscar en tu despensa..."
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textColor="#333333"
+            android:textColorHint="#8A877E"
+            android:textSize="12sp"
+            android:singleLine="true" />
+
+        <!-- FILTROS -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnTodos"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_weight="1"
+                android:text="Todos"
+                android:textSize="10sp"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/bg_filtro_activo" />
+
+            <Button
+                android:id="@+id/btnUrgentes"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="7dp"
+                android:layout_weight="1"
+                android:text="Urgentes"
+                android:textSize="10sp"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/bg_filtro" />
+
+            <Button
+                android:id="@+id/btnPronto"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="7dp"
+                android:layout_weight="1"
+                android:text="Pronto"
+                android:textSize="10sp"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/bg_filtro" />
+
+            <Button
+                android:id="@+id/btnBien"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="7dp"
+                android:layout_weight="1"
+                android:text="Bien"
+                android:textSize="10sp"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/bg_filtro" />
+        </LinearLayout>
+
+        <!-- LISTA DE PRODUCTOS -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerProductos"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp" />
+
+    </LinearLayout>
+
+    <!-- SE ELIMINÓ EL BOTÓN FLOTANTE (+) -->
+
+    <include layout="@layout/layout_menu" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

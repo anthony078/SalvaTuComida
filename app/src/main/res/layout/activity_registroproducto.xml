@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F1E8">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- TÍTULO -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registrar alimento"
+            android:textColor="#1D4327"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Agrega un alimento a tu despensa"
+            android:textColor="#666666"
+            android:textSize="14sp" />
+
+
+        <!-- NOMBRE -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Nombre del alimento"
+            android:textColor="#333333"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtNombre"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="8dp"
+            android:hint="Ej. Leche"
+            android:inputType="textCapSentences"
+            android:padding="12dp" />
+
+
+        <!-- CANTIDAD -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="Cantidad"
+            android:textColor="#333333"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtCantidad"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="8dp"
+            android:hint="Ej. 2"
+            android:inputType="numberDecimal"
+            android:padding="12dp" />
+
+
+        <!-- UNIDAD -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="Unidad"
+            android:textColor="#333333"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtUnidad"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="8dp"
+            android:hint="Ej. litros, kg, unidades"
+            android:inputType="text"
+            android:padding="12dp" />
+
+
+        <!-- FECHA -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="Fecha de vencimiento"
+            android:textColor="#333333"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtFechaVencimiento"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="8dp"
+            android:hint="Seleccione una fecha"
+            android:focusable="false"
+            android:clickable="true"
+            android:padding="12dp" />
+
+
+        <!-- BOTÓN -->
+
+        <Button
+            android:id="@+id/btnGuardar"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginTop="30dp"
+            android:text="Guardar alimento"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</ScrollView>
+

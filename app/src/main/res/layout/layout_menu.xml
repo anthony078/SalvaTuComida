@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="62dp"
+    android:layout_gravity="bottom"
+    android:orientation="horizontal"
+    android:background="#FFFFFF"
+    android:elevation="8dp">
+
+    <!-- INICIO -->
+    <LinearLayout
+        android:id="@+id/navInicio"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/emojiInicio"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:gravity="center"
+            android:text="⌂"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textoInicio"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="Inicio"
+            android:textSize="8sp"
+            android:textColor="#555555" />
+    </LinearLayout>
+
+    <!-- INVENTARIO -->
+    <LinearLayout
+        android:id="@+id/navInventario"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/emojiInventario"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:gravity="center"
+            android:text="📦"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textoInventario"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="Inventario"
+            android:textSize="8sp"
+            android:textColor="#555555" />
+    </LinearLayout>
+
+    <!-- RECETAS -->
+    <LinearLayout
+        android:id="@+id/navRecetas"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/emojiRecetas"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:gravity="center"
+            android:text="⌕"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textoRecetas"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="Recetas"
+            android:textSize="8sp"
+            android:textColor="#555555" />
+    </LinearLayout>
+
+    <!-- COMPRAS -->
+    <LinearLayout
+        android:id="@+id/navCompras"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/emojiCompras"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:gravity="center"
+            android:text="🛒"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textoCompras"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="Compras"
+            android:textSize="8sp"
+            android:textColor="#555555" />
+    </LinearLayout>
+
+    <!-- PERFIL -->
+    <LinearLayout
+        android:id="@+id/navPerfil"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/emojiPerfil"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:gravity="center"
+            android:text="♟"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textoPerfil"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="Perfil"
+            android:textSize="8sp"
+            android:textColor="#555555" />
+    </LinearLayout>
+
+</LinearLayout>
+
