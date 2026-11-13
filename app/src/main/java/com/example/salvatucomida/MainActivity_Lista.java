@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.location.Location; // 👈 IMPORTANTE PARA DISTANCIAS
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
@@ -88,32 +88,36 @@ public class MainActivity_Lista extends AppCompatActivity {
 
         prefs = getSharedPreferences("SalvaTuComidaPrefs", Context.MODE_PRIVATE);
 
-        recyclerProductos   = findViewById(R.id.recyclerProductos);
-        recyclerTiendas     = findViewById(R.id.recyclerTiendas);
-        txtPendiente        = findViewById(R.id.txtPendiente);
-        txtPendienteCard    = findViewById(R.id.txtPendienteCard);
-        txtContador         = findViewById(R.id.txtContador);
-        txtSinTiendas       = findViewById(R.id.txtSinTiendas);
-        edtNuevoProducto    = findViewById(R.id.edtNuevoProducto);
-        btnAgregarProducto  = findViewById(R.id.btnAgregarProducto);
-        btnCompararPrecios  = findViewById(R.id.btnCompararPrecios);
-        btnAgregarTienda    = findViewById(R.id.btnAgregarTienda);
-        btnRegistrarCompra  = findViewById(R.id.btnRegistrarCompra);
+        // 1) Conectar vistas
+        recyclerProductos     = findViewById(R.id.recyclerProductos);
+        recyclerTiendas       = findViewById(R.id.recyclerTiendas);
+        txtPendiente          = findViewById(R.id.txtPendiente);
+        txtPendienteCard      = findViewById(R.id.txtPendienteCard);
+        txtContador           = findViewById(R.id.txtContador);
+        txtSinTiendas         = findViewById(R.id.txtSinTiendas);
+        edtNuevoProducto      = findViewById(R.id.edtNuevoProducto);
+        btnAgregarProducto    = findViewById(R.id.btnAgregarProducto);
+        btnCompararPrecios    = findViewById(R.id.btnCompararPrecios);
+        btnAgregarTienda      = findViewById(R.id.btnAgregarTienda);
+        btnRegistrarCompra    = findViewById(R.id.btnRegistrarCompra);
         btnSincronizarTiendas = findViewById(R.id.btnSincronizarTiendas);
-        fabAgregar          = findViewById(R.id.fabAgregar);
-        lottieVacio         = findViewById(R.id.lottieVacio);
+        fabAgregar            = findViewById(R.id.fabAgregar);
+        lottieVacio           = findViewById(R.id.lottieVacio);
 
+        // 2) Navegación (los IDs del layout_menu.xml)
         navInicio     = findViewById(R.id.navInicio);
         navInventario = findViewById(R.id.navInventario);
         navRecetas    = findViewById(R.id.navRecetas);
         navCompras    = findViewById(R.id.navCompras);
         navPerfil     = findViewById(R.id.navPerfil);
 
+        // 3) DAOs
         daoListaCompra  = new DAOListaCompra(this);
         daoTienda       = new DAOTienda(this);
         daoPrecioTienda = new DAOPrecioTienda(this);
         daoProducto     = new DAOProducto(this);
 
+        // 4) Botón atrás personalizado (vuelve a Inicio)
         getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -125,6 +129,7 @@ public class MainActivity_Lista extends AppCompatActivity {
             }
         });
 
+        // 5) Image Picker (para fotos al pasar al inventario)
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 uri -> {
@@ -137,6 +142,7 @@ public class MainActivity_Lista extends AppCompatActivity {
                 }
         );
 
+        // 6) RecyclerView de Productos
         recyclerProductos.setLayoutManager(new LinearLayoutManager(this));
         adapterProductos = new ProductoListaAdapter(listaProductos, new ProductoListaAdapter.OnItemListener() {
             @Override public void onMarcar(ListaCompra p)             { pedirPrecioYMarcar(p); }
@@ -146,6 +152,7 @@ public class MainActivity_Lista extends AppCompatActivity {
         });
         recyclerProductos.setAdapter(adapterProductos);
 
+        // 7) RecyclerView de Tiendas
         recyclerTiendas.setLayoutManager(new LinearLayoutManager(this));
         adapterTiendas = new TiendaAdapter(listaTiendas, this, new TiendaAdapter.OnTiendaListener() {
             @Override public void onEditar(Tienda t)         { editarTienda(t); }
@@ -154,28 +161,30 @@ public class MainActivity_Lista extends AppCompatActivity {
         });
         recyclerTiendas.setAdapter(adapterTiendas);
 
+        // 8) Listeners de botones
         btnAgregarProducto.setOnClickListener(v -> agregarProducto());
         fabAgregar.setOnClickListener(v -> agregarProducto());
         btnRegistrarCompra.setOnClickListener(v -> dialogoRegistrarCompra(null));
         btnCompararPrecios.setOnClickListener(v -> compararPrecios());
-
         btnAgregarTienda.setOnClickListener(v -> {
             Intent intent = new Intent(this, MainActivity_Tienda.class);
             startActivity(intent);
         });
-
         btnSincronizarTiendas.setOnClickListener(v -> sincronizarTiendas());
 
+        // 9) Configurar navegación inferior
         configurarNavegacion();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        recalcularDistancias(); // 👈 ACTUALIZA LAS DISTANCIAS
+        recalcularDistancias();
         cargarProductos();
         cargarTiendas();
     }
+
+    // ================= LÓGICA DE NEGOCIO =================
 
     private void recalcularDistancias() {
         float latCasa = prefs.getFloat("casa_lat", -7.16378f);
@@ -308,7 +317,7 @@ public class MainActivity_Lista extends AppCompatActivity {
                     String texto = input.getText().toString().trim();
                     double precio = 0;
                     if (!texto.isEmpty()) {
-                        try { precio = Double.parseDouble(texto); } catch (NumberFormatException e) {
+                        try { precio = Double.parseDouble(texto.replace(",", ".")); } catch (NumberFormatException e) {
                             Toast.makeText(this, "Por favor, ingresa un número válido", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -338,57 +347,135 @@ public class MainActivity_Lista extends AppCompatActivity {
 
     private void dialogoRegistrarCompra(Integer tiendaId) {
         List<ListaCompra> pendientes = new ArrayList<>();
-        for (ListaCompra p : listaProductos) if (!p.isComprado()) pendientes.add(p);
-        if (pendientes.isEmpty()) { Toast.makeText(this, "No hay pendientes", Toast.LENGTH_SHORT).show(); return; }
 
+        // Mapa de precios para la tienda seleccionada
         Map<Integer, Double> preciosTienda = new HashMap<>();
-        if (tiendaId != null) { for (PrecioTienda pt : daoPrecioTienda.obtenerPorTienda(tiendaId)) preciosTienda.put(pt.getListaCompraId(), pt.getPrecio()); }
+        if (tiendaId != null) {
+            for (PrecioTienda pt : daoPrecioTienda.obtenerPorTienda(tiendaId)) {
+                preciosTienda.put(pt.getListaCompraId(), pt.getPrecio());
+            }
+        }
+
+        // Filtrar productos: si hay tienda, solo mostrar los que tienen precio
+        for (ListaCompra p : listaProductos) {
+            if (p.isComprado()) continue; // Saltamos los ya comprados
+            if (tiendaId != null) {
+                Double pre = preciosTienda.get(p.getId());
+                if (pre == null || pre <= 0) continue; // Si no tiene precio en esa tienda, no lo mostramos
+            }
+            pendientes.add(p);
+        }
+
+        if (pendientes.isEmpty()) {
+            Toast.makeText(this, "No hay productos con precio en esta tienda", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         int pad = (int) (12 * getResources().getDisplayMetrics().density);
-        LinearLayout cont = new LinearLayout(this); cont.setOrientation(LinearLayout.VERTICAL); cont.setPadding(pad, pad, pad, pad);
+        LinearLayout cont = new LinearLayout(this);
+        cont.setOrientation(LinearLayout.VERTICAL);
+        cont.setPadding(pad, pad, pad, pad);
         final List<FilaCompra> filas = new ArrayList<>();
 
         for (ListaCompra p : pendientes) {
-            LinearLayout fila = new LinearLayout(this); fila.setOrientation(LinearLayout.HORIZONTAL); fila.setGravity(Gravity.CENTER_VERTICAL); fila.setPadding(0, pad / 2, 0, pad / 2);
-            CheckBox chk = new CheckBox(this); chk.setButtonTintList(android.content.res.ColorStateList.valueOf(0xFF1D4327));
-            TextView tvN = new TextView(this); tvN.setText(p.getNombre()); tvN.setTextColor(0xFF222222); tvN.setTextSize(13);
+            LinearLayout fila = new LinearLayout(this);
+            fila.setOrientation(LinearLayout.HORIZONTAL);
+            fila.setGravity(Gravity.CENTER_VERTICAL);
+            fila.setPadding(0, pad / 2, 0, pad / 2);
+
+            CheckBox chk = new CheckBox(this);
+            chk.setButtonTintList(android.content.res.ColorStateList.valueOf(0xFF1D4327));
+
+            TextView tvN = new TextView(this);
+            tvN.setText(p.getNombre());
+            tvN.setTextColor(0xFF222222);
+            tvN.setTextSize(13);
             tvN.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-            EditText edtP = new EditText(this); edtP.setHint("S/"); edtP.setTextSize(12); edtP.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+            EditText edtP = new EditText(this);
+            edtP.setHint("S/");
+            edtP.setTextSize(12);
+            edtP.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             edtP.setLayoutParams(new LinearLayout.LayoutParams((int) (70 * getResources().getDisplayMetrics().density), ViewGroup.LayoutParams.WRAP_CONTENT));
 
-            Double pre = preciosTienda.get(p.getId());
-            if (pre != null && pre > 0) { chk.setChecked(true); edtP.setText(String.format(Locale.getDefault(), "%.2f", pre)); edtP.setEnabled(true); }
-            else { chk.setChecked(false); edtP.setEnabled(false); }
-            chk.setOnCheckedChangeListener((btn, checked) -> { edtP.setEnabled(checked); if (!checked) edtP.setText(""); });
+            // Listener del checkbox (habilitar/deshabilitar el campo)
+            chk.setOnCheckedChangeListener((btn, checked) -> {
+                edtP.setEnabled(checked);
+                if (!checked) {
+                    edtP.setText("");
+                }
+            });
 
-            fila.addView(chk); fila.addView(tvN); fila.addView(edtP); cont.addView(fila);
+            // Si viene de una tienda, el precio ya existe y se marca automáticamente
+            Double pre = preciosTienda.get(p.getId());
+            if (pre != null && pre > 0) {
+                chk.setChecked(true); // Dispara el listener y habilita edtP
+                edtP.setText(String.format(Locale.getDefault(), "%.2f", pre));
+            } else {
+                // Esto solo pasa si tiendaId es null (registro manual desde el botón general)
+                chk.setChecked(false);
+                edtP.setText("");
+                edtP.setEnabled(false);
+            }
+
+            fila.addView(chk);
+            fila.addView(tvN);
+            fila.addView(edtP);
+            cont.addView(fila);
             filas.add(new FilaCompra(p, chk, edtP));
         }
-        ScrollView scroll = new ScrollView(this); scroll.addView(cont);
 
-        new AlertDialog.Builder(this).setTitle("💰 Registrar compra").setView(scroll)
+        ScrollView scroll = new ScrollView(this);
+        scroll.addView(cont);
+
+        new AlertDialog.Builder(this)
+                .setTitle("💰 Registrar compra")
+                .setView(scroll)
                 .setPositiveButton("Confirmar", (d, w) -> {
                     double totalNuevaCompra = 0;
                     for (FilaCompra fr : filas) {
                         if (fr.check.isChecked()) {
                             String t = fr.precio.getText().toString().trim();
-                            if (!t.isEmpty()) { try { totalNuevaCompra += Double.parseDouble(t); } catch (NumberFormatException ignored) {} }
+                            if (!t.isEmpty()) {
+                                try { totalNuevaCompra += Double.parseDouble(t.replace(",", ".")); } catch (NumberFormatException ignored) {}
+                            }
                         }
                     }
+
                     if (!verificarPresupuesto(totalNuevaCompra)) return;
-                    int c = 0; double tot = 0;
+
+                    int c = 0;
+                    double tot = 0;
                     for (FilaCompra fr : filas) {
                         if (!fr.check.isChecked()) continue;
-                        String t = fr.precio.getText().toString().trim(); if (t.isEmpty()) continue;
+                        String t = fr.precio.getText().toString().trim();
+                        if (t.isEmpty()) continue;
+
                         double pre = 0;
-                        try { pre = Double.parseDouble(t); } catch (NumberFormatException e) {
+                        try {
+                            pre = Double.parseDouble(t.replace(",", "."));
+                        } catch (NumberFormatException e) {
                             Toast.makeText(this, "Precio inválido en " + fr.producto.getNombre(), Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        fr.producto.setComprado(true); fr.producto.setPrecio(pre); daoListaCompra.actualizar(fr.producto); c++; tot += pre;
+
+                        fr.producto.setComprado(true);
+                        fr.producto.setPrecio(pre);
+                        daoListaCompra.actualizar(fr.producto);
+                        c++;
+                        tot += pre;
                     }
-                    if (c > 0) { sumarGasto(tot); cargarProductos(); Toast.makeText(this, "✅ " + c + " productos", Toast.LENGTH_SHORT).show(); }
-                }).setNegativeButton("Cancelar", null).show();
+
+                    if (c > 0) {
+                        sumarGasto(tot);
+                        cargarProductos();
+                        Toast.makeText(this, "✅ " + c + " productos registrados", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "No se seleccionó ningún producto", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 
     private static class FilaCompra {
@@ -441,7 +528,7 @@ public class MainActivity_Lista extends AppCompatActivity {
                     String cantTxt = edtCantidad.getText().toString().trim(); String uni = edtUnidad.getText().toString().trim();
                     if (cantTxt.isEmpty() || uni.isEmpty()) { Toast.makeText(this, "Completa campos", Toast.LENGTH_SHORT).show(); return; }
                     double cant = 0;
-                    try { cant = Double.parseDouble(cantTxt); } catch (NumberFormatException e) { Toast.makeText(this, "Cantidad inválida", Toast.LENGTH_SHORT).show(); return; }
+                    try { cant = Double.parseDouble(cantTxt.replace(",", ".")); } catch (NumberFormatException e) { Toast.makeText(this, "Cantidad inválida", Toast.LENGTH_SHORT).show(); return; }
                     if (cant <= 0) { Toast.makeText(this, "Cantidad inválida", Toast.LENGTH_SHORT).show(); return; }
 
                     Producto np = new Producto(0, producto.getNombre(), cant, uni, fecha[0], System.currentTimeMillis(), obtenerEmoji(producto.getNombre()));
@@ -505,10 +592,19 @@ public class MainActivity_Lista extends AppCompatActivity {
             EditText edtP = new EditText(this); edtP.setHint("S/"); edtP.setTextSize(12); edtP.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             edtP.setLayoutParams(new LinearLayout.LayoutParams((int) (70 * getResources().getDisplayMetrics().density), ViewGroup.LayoutParams.WRAP_CONTENT));
 
-            Double precioGuardado = mapaPrecios.get(p.getId());
-            if (precioGuardado != null && precioGuardado > 0) { chk.setChecked(true); edtP.setText(String.format(Locale.getDefault(), "%.2f", precioGuardado)); edtP.setEnabled(true); }
-            else { chk.setChecked(false); edtP.setEnabled(false); }
+            // Mismo arreglo: listener primero, luego checked
             chk.setOnCheckedChangeListener((btn, checked) -> { edtP.setEnabled(checked); if (!checked) edtP.setText(""); });
+
+            Double precioGuardado = mapaPrecios.get(p.getId());
+            if (precioGuardado != null && precioGuardado > 0) {
+                chk.setChecked(true);
+                edtP.setText(String.format(Locale.getDefault(), "%.2f", precioGuardado));
+            }
+            else {
+                chk.setChecked(false);
+                edtP.setText("");
+                edtP.setEnabled(false);
+            }
 
             fila.addView(chk); fila.addView(tvN); fila.addView(edtP); cont.addView(fila);
             filas.add(new FilaPrecio(p.getId(), chk, edtP));
@@ -524,7 +620,7 @@ public class MainActivity_Lista extends AppCompatActivity {
                         if (!fp.check.isChecked()) continue;
                         String t = fp.precio.getText().toString().trim(); if (t.isEmpty()) continue;
                         double pre = 0;
-                        try { pre = Double.parseDouble(t); } catch (NumberFormatException e) {
+                        try { pre = Double.parseDouble(t.replace(",", ".")); } catch (NumberFormatException e) {
                             Toast.makeText(this, "Precio inválido en un producto", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -623,26 +719,51 @@ public class MainActivity_Lista extends AppCompatActivity {
         int p = (int) (8 * getResources().getDisplayMetrics().density); tv.setPadding(0, p, 0, 0); return tv;
     }
 
+    // ================= NAVEGACIÓN (SIN BaseActivity) =================
+
     private void configurarNavegacion() {
         if (navInicio == null) return;
-        setInactivo(navInicio, R.id.textoInicio); setInactivo(navInventario, R.id.textoInventario);
-        setInactivo(navRecetas, R.id.textoRecetas); setInactivo(navCompras, R.id.textoCompras); setInactivo(navPerfil, R.id.textoPerfil);
+
+        setInactivo(navInicio,     R.id.textoInicio);
+        setInactivo(navInventario, R.id.textoInventario);
+        setInactivo(navRecetas,    R.id.textoRecetas);
+        setInactivo(navCompras,    R.id.textoCompras);
+        setInactivo(navPerfil,     R.id.textoPerfil);
+
         setActivo(navCompras, R.id.textoCompras);
+
         navInicio.setOnClickListener(v -> irA(MainActivity_Inicio.class));
         navInventario.setOnClickListener(v -> irA(MainActivity_Inventario.class));
         navRecetas.setOnClickListener(v -> irA(MainActivity_Recetas.class));
         navCompras.setOnClickListener(v -> { });
         navPerfil.setOnClickListener(v -> irA(MainActivity_Perfil.class));
     }
-    private void irA(Class<?> destino) { startActivity(new Intent(this, destino)); overridePendingTransition(0, 0); finish(); }
+
+    private void irA(Class<?> destino) {
+        startActivity(new Intent(this, destino));
+        overridePendingTransition(0, 0);
+        finish();
+    }
+
     private void setActivo(LinearLayout contenedor, int textoId) {
-        if (contenedor == null) return; TextView t = contenedor.findViewById(textoId);
-        if (t != null) { t.setTextColor(COLOR_ACTIVO); t.setTypeface(null, Typeface.BOLD); }
+        if (contenedor == null) return;
+        TextView t = contenedor.findViewById(textoId);
+        if (t != null) {
+            t.setTextColor(COLOR_ACTIVO);
+            t.setTypeface(null, Typeface.BOLD);
+        }
     }
+
     private void setInactivo(LinearLayout contenedor, int textoId) {
-        if (contenedor == null) return; TextView t = contenedor.findViewById(textoId);
-        if (t != null) { t.setTextColor(COLOR_INACTIVO); t.setTypeface(null, Typeface.NORMAL); }
+        if (contenedor == null) return;
+        TextView t = contenedor.findViewById(textoId);
+        if (t != null) {
+            t.setTextColor(COLOR_INACTIVO);
+            t.setTypeface(null, Typeface.NORMAL);
+        }
     }
+
+    // ================= SINCRONIZACIÓN API =================
 
     private void sincronizarTiendas() {
         APIServicioCliente api = RetrofitCliente.getCliente().create(APIServicioCliente.class);
