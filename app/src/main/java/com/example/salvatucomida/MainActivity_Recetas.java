@@ -361,7 +361,8 @@ public class MainActivity_Recetas extends AppCompatActivity {
                 .build();
 
         APIServicioIA api = retrofitIA.create(APIServicioIA.class);
-        String apiKey = "Bearer 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";
+// solicitar al dueño de la api key
+        String apiKey = "Bearer Api ";
 
         api.generarReceta(apiKey, request).enqueue(new Callback<IAResponse>() {
             @Override
